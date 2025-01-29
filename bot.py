@@ -32,9 +32,7 @@ load_dotenv()
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD_ID = os.getenv('GUILD_ID') #TODO 
 ROLE_ID = int(os.getenv('ROLE_ID'))
-#GUILD_ID = 1048827299534999593 #TODO COMMENT!
-# print('************Discord_TOKEN:', DISCORD_TOKEN)
-# print('*******************GUILD_ID:', GUILD_ID)
+
 
 #-----------------------------------------------------------------------------------
 guild_ids = [int(GUILD_ID)]
@@ -111,10 +109,11 @@ async def ticket(inter: disnake.ApplicationCommandInteraction, message: str = co
     embed.add_field(name="Message", value=message, inline=False)
     embed.set_footer(text=f"{inter.author.display_name} | {inter.author.id} | {now.month}/{now.day} at {hour}:{minute} {period} CST")
 
+    
     # Send the embed to the new ticket channel
     await ticket_channel.send(embed=embed)
     await inter.response.send_message(f"Your ticket has been submitted successfully for admin review! Admin(s) will respond to your ticket at the private text channel: {ticket_channel.mention}", ephemeral=True)
-
+    print(">Unanonymous ticket submitted!")
 
 
 # Command for admins to respond to tickets
@@ -144,6 +143,7 @@ async def respond(
         if inter.channel.name.startswith("ticket-"):
             await inter.channel.send(embed=embed)
             await inter.response.send_message("Your response has been sent.", ephemeral=True)
+            print("<Unanonymous ticket responded to by admins!")
 
         # Check if this is an anonymous ticket
         elif inter.channel.name.startswith("anonymous-ticket-"):
@@ -158,6 +158,7 @@ async def respond(
                     # Send the response to the user via DM
                     await user.send(embed=embed)
                     await inter.send('Admin DM was sent to anonymous user.')
+                    print("<Anonymous ticket responded to by admins!")
                 except disnake.Forbidden:
                     await inter.channel.send("Failed to send DM to the user.")
 
@@ -184,6 +185,7 @@ async def close(inter: disnake.ApplicationCommandInteraction):
         await inter.response.send_message("Ticket has been closed. Deleting the channel in 5 seconds.")
         await asyncio.sleep(5)
         await channel.delete()
+        print("<>Discord channel deleted!")
     else:
         return await inter.send('This command may only be used in a ticket channel')
 
@@ -230,7 +232,7 @@ async def on_message(message: disnake.Message):
 
         # Send a confirmation to the user
         await message.author.send("Your anonymous ticket has been submitted successfully! Please allow the admins time to respond to your ticket, which response you will see receive in this DM.")
-
+        print(">Anonymous ticket submitted!")
 
 
 

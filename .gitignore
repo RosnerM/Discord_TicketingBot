@@ -1,0 +1,5 @@
+.env
+__pycache__/
+databases/*
+# Ignore everything in the databases folder, but not the folder itself
+!databases/.gitkeep

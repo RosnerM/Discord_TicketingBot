@@ -6,5 +6,3 @@ services:
     restart: unless-stopped
     volumes: 
      - ./databases:/app/databases
-     # database_volume:/app/databases
-     
